@@ -12,13 +12,18 @@ pipeline {
     }
   }
   stages {
-    stage('Test') {
+    stage('GO GET') {
       steps {
         container('golang') {
           sh """
+            echo 'Pulling Dependencies'
+            go version
+
             ln -s `pwd` /go/src/sample-app
             cd /go/src/sample-app
-            go test
+            go get -u github.com/source-code-smith/cd-hello-app
+            ls -lah
+            go build
           """
         }
       }
