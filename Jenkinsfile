@@ -8,10 +8,6 @@ def currentBranch
 
 node {
 
-  #stage('SCM') {
-  #    checkout scm
-  #}
-
   stage('Build Docker Image') {
       sh 'pwd'
       dir('src/github.com/source-code-smith/cd-hello-app') {
