@@ -17,7 +17,7 @@ node {
   stage('Build Docker Image') {
       sh 'pwd'
       dir('src/github.com/source-code-smith/cd-hello-app') {
-          builtImage = docker.build(${imageName}: + branch)
+          builtImage = docker.build("${imageName}:branch")
       }
   }
 
