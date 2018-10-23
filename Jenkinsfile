@@ -1,5 +1,10 @@
 #!groovy
 
+def publisher = 'trustlab'
+def  appName = 'cd-hello'
+def  feSvcName = "${appName}-frontend"
+def  imageName = "${publisher}/${appName}"
+
 pipeline {
   agent {
     kubernetes {
@@ -9,20 +14,22 @@ pipeline {
     }
   }
   stages {
-    stage('Go Install') {
-      agent {
-        docker {
-          image 'golang:1.10'
+    stage('Test') {
+      steps {
+        container('golang') {
+          sh """
+            ln -s `pwd` /go/src/sample-app
+            cd /go/src/sample-app
+            go test
+          """
         }
       }
-      steps {
-        sh 'go install'
-      }
     }
-    stage('Docker Build') {
-      agent any
+    stage('Build and push image with Container Builder') {
       steps {
-        sh 'docker build -t trustlab/cd-hello:latest .'
+        container('gcloud') {
+          sh "PYTHONUNBUFFERED=1 gcloud container builds submit -t ${imageTag} ."
+        }
       }
     }
   }
