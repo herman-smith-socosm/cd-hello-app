@@ -17,10 +17,20 @@ pipeline {
       steps {
         container('golang') {
           sh """
-            echo 'Pulling Dependencies'
-            go version
-
+            echo 'Symbolically Linking'
             ln -s `pwd` $srcDir
+            go version
+            docker images
+          """
+        }
+      }
+    }
+    stage('BUILD') {
+      steps {
+        container('golang') {
+          sh """
+            echo 'Pulling Dependencies'
+
             cd $srcDir
             go get -u github.com/source-code-smith/cd-hello-app
             ls -lah
@@ -29,5 +39,6 @@ pipeline {
         }
       }
     }
+
   }
 }
