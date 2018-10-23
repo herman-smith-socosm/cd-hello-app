@@ -14,22 +14,23 @@ pipeline {
     }
   }
   stages {
-    stage('DOCKER VERSION') {
-      steps {
-        container('docker') {
-          sh """
-            docker --version
-          """
-        }
-      }
-    }
-    stage('GO VERSION') {
+    stage('GO') {
       steps {
         container('golang') {
           sh """
             go version
             ln -s `pwd` /go/src/$appName
             cd /go/src/$appName
+            go install -v
+          """
+        }
+      }
+    }
+    stage('DOCKER') {
+      steps {
+        container('docker') {
+          sh """
+            docker --version
           """
         }
       }
