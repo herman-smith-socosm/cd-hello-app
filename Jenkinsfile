@@ -2,6 +2,7 @@ def publisher = 'trustlab'
 def  appName = 'cd-hello'
 def  feSvcName = "${appName}-frontend"
 def  imageTag = "${publisher}/${appName}:${env.BRANCH_NAME}"
+def srcDir = '/go/src/sample-app'
 
 pipeline {
   agent {
@@ -19,8 +20,8 @@ pipeline {
             echo 'Pulling Dependencies'
             go version
 
-            ln -s `pwd` /go/src/sample-app
-            cd /go/src/sample-app
+            ln -s `pwd` $srcDir
+            cd $srcDir
             go get -u github.com/source-code-smith/cd-hello-app
             ls -lah
             go build
