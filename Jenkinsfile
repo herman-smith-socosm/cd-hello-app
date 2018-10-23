@@ -1,7 +1,13 @@
 #!groovy
 
 pipeline {
-  agent none
+  agent {
+    kubernetes {
+      label 'kubernetes-ag3nt-pod'
+      defaultContainer 'jnlp'
+      yamlFile 'KubernetesSuperPod.yaml'
+    }
+  }
   stages {
     stage('Go Install') {
       agent {
