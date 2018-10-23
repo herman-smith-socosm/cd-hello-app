@@ -6,4 +6,4 @@ then
   IMAGE_TAG=latest
 fi
 
-docker build -t trustlab/cd-hello-app:$IMAGE_TAG .
+docker build -t trustlab/cd-hello:$IMAGE_TAG .
