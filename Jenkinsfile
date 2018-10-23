@@ -34,9 +34,8 @@ pipeline {
 
             pwd
             ls -lsh
-            
-            COMMIT_HASH=$(git rev-parse --short HEAD)
-            echo $COMMIT_HASH
+
+            ./build-docker-image.sh
           """
         }
       }
