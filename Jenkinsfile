@@ -14,21 +14,23 @@ pipeline {
     }
   }
   stages {
-    stage('Test') {
+    stage('DOCKER VERSION') {
       steps {
-        container('golang') {
+        container('docker') {
           sh """
-            ln -s `pwd` /go/src/sample-app
-            cd /go/src/sample-app
-            go test
+            docker --version
           """
         }
       }
     }
-    stage('Build and push image with Container Builder') {
+    stage('GO VERSION') {
       steps {
-        container('gcloud') {
-          sh "PYTHONUNBUFFERED=1 gcloud container builds submit -t ${imageTag} ."
+        container('golang') {
+          sh """
+            go version
+            ln -s `pwd` /go/src/$appName
+            cd /go/src/$appName
+          """
         }
       }
     }
