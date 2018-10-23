@@ -5,6 +5,8 @@ def  imageTag = "${publisher}/${appName}:${env.BRANCH_NAME}"
 def srcDir = '/go/src/sample-app'
 
 pipeline {
+  def app
+
   agent {
     kubernetes {
       label 'kubernetes-ag3nt-pod'
@@ -20,7 +22,6 @@ pipeline {
             echo 'Symbolically Linking'
             ln -s `pwd` $srcDir
             go version
-            docker images
           """
         }
       }
@@ -35,10 +36,13 @@ pipeline {
             go get -u github.com/source-code-smith/cd-hello-app
             ls -lah
             go build
+            go install
+
+            echo $imageTag
+            app = docker.build($imageTag)
           """
         }
       }
     }
-
   }
 }
