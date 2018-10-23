@@ -1,7 +1,7 @@
 def publisher = 'trustlab'
 def  appName = 'cd-hello'
 def  feSvcName = "${appName}-frontend"
-def  imageTag = "${publisher}/${appName}:${env.BRANCH_NAME}"
+def  imageName = "${publisher}/${appName}"
 def srcDir = '/go/src/sample-app'
 def app
 
@@ -38,8 +38,9 @@ pipeline {
             go build
             go install
 
-            echo $imageTag
-            app = docker.build($imageTag)
+            echo "image name: " + $imageName
+            echo "branch name: " + env.BRANCH_NAME
+            app = docker.build($imageName)
           """
         }
       }
