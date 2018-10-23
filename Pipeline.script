@@ -1,0 +1,36 @@
+pipeline {
+  environment {
+    registry = "trustlab/cd-hello"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+  }
+  agent {
+    docker {
+      label 'jenkins-k8s-pod'
+      defaultContainer 'jnlp'
+    }
+  }
+  stages {
+    stage('Cloning Git') {
+      steps {
+        git 'https://github.com/source-code-smith/cd-hello-app.git'
+      }
+    }
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+  }
+}
