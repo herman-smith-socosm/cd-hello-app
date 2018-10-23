@@ -31,6 +31,8 @@ pipeline {
         container('docker') {
           sh """
             docker --version
+            pwd
+            ls -lsh
           """
         }
       }
