@@ -3,10 +3,10 @@ def  appName = 'cd-hello'
 def  feSvcName = "${appName}-frontend"
 def  imageTag = "${publisher}/${appName}:${env.BRANCH_NAME}"
 def srcDir = '/go/src/sample-app'
+def app
+
 
 pipeline {
-  def app
-
   agent {
     kubernetes {
       label 'kubernetes-ag3nt-pod'
