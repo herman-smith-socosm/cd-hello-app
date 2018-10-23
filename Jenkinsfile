@@ -31,8 +31,12 @@ pipeline {
         container('docker') {
           sh """
             docker --version
+
             pwd
             ls -lsh
+            
+            COMMIT_HASH=$(git rev-parse --short HEAD)
+            echo $COMMIT_HASH
           """
         }
       }
