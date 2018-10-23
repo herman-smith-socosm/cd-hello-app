@@ -1,44 +1,27 @@
-#!groovy
 
 def publisher = 'trustlab'
 def  appName = 'cd-hello'
-def  feSvcName = "${appName}-frontend"
 def  imageName = "${publisher}/${appName}"
 
-pipeline {
-  agent {
-    kubernetes {
-      label 'kubernetes-ag3nt-pod'
-      defaultContainer 'jnlp'
-      yamlFile 'KubernetesSuperPod.yaml'
-    }
+def builtImage
+def currentBranch
+
+node {
+
+  stage('SCM') {
+      checkout scm
+      currentBranch = scm.branches[0].name.drop(2)
+      echo 'Branch Name: ' + currentBranch
   }
-  stages {
-    stage('GO') {
-      steps {
-        container('golang') {
-          sh """
-            go version
-            ln -s `pwd` /go/src/$appName
-            cd /go/src/$appName
-            go install -v
-          """
-        }
-      }
-    }
-    stage('DOCKER') {
-      steps {
-        container('docker') {
-          sh """
-            docker --version
 
-            pwd
-            ls -lsh
-
-            ./build-docker-image.sh
-          """
-        }
+  stage('Build Docker Image') {
+      sh 'pwd'
+      dir('src/github.com/source-code-smith/cd-hello-app') {
+          builtImage = docker.build(${imageName}: + branch)
       }
-    }
+  }
+
+  builtImage.inside {
+      sh 'make test'
   }
 }
